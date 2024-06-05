@@ -2,28 +2,99 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+}
+
 :root {
-  --foreground-rgb: 0, 0, 0;
+  /* --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255; */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
+    /* --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0; */
   }
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  /* color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
-    rgb(var(--background-start-rgb));
+    rgb(var(--background-start-rgb)); */
+}
+
+main {
+  width: 100%;
+  min-height: screen;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  align-items: center;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+.login-form {
+  padding: 1rem 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  border: 2px solid darkblue;
+  border-radius: 1rem;
+}
+
+.field__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.field__group > label {
+  font-size: 1rem;
+  font-weight: 300;
+  padding-left: 1rem;
+}
+
+.login-form .field__group > input,
+.login-form .field__input {
+  border: 2px solid darkblue;
+  border-radius: 999rem;
+  padding: 0.25rem 1rem;
+}
+
+.field__group > input:focus-within {
+  outline: 2px solid darkgoldenrod;
+  border: none;
+}
+
+.forgot__password {
+  width: 100%;
+  text-align: right;
+  padding-right: 0.5rem;
+}
+
+.remember {
+  width: 100%;
+  text-align: start;
+}
+
+.submit__button {
+  padding: 0.25rem 1rem;
+  border: 2px solid darkblue;
+  border-radius: 999rem;
+  margin: 1rem 0;
 }
 
 @layer utilities {

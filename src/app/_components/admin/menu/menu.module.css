@@ -1,0 +1,17 @@
+.link_container {
+  padding: 0;
+}
+
+.link_container > ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 100;
+  margin: 0.5rem;
+}
+
+.link_container .link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
