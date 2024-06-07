@@ -42,7 +42,10 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
+    console.log("API: Patch");
     const product = await request.json();
+
+    console.log(product);
 
     const db = await dbConnect();
 

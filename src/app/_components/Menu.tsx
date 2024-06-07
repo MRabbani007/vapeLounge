@@ -1,64 +1,80 @@
 import Link from "next/link";
-import { getProducts } from "../_lib/utils";
-import {
-  GetServerSideProps,
-  GetStaticProps,
-  InferGetServerSidePropsType,
-  InferGetStaticPropsType,
-} from "next";
-import dbConnect from "../_lib/mongoose";
-import Product from "../_lib/dbSchemas/product";
+import { getProductTypes } from "../_lib/productControllers";
+import { IoChevronForward } from "react-icons/io5";
+import MenuGroup from "./MenuGroup";
+
+type Props = {
+  products: Product[];
+};
 
 // export const getServerSideProps = (async () => {
-//   // Fetch data from external API
+//   try {
+//     // Fetch data from external API
+//     const client = await dbConnect();
+
+//     const products: Product[] = await getProducts();
+
+//     console.log("getserversideprops", products);
+
+//     const props: Props = { products };
+
+//     // Pass data to the page via props
+//     return { props };
+//   } catch (e) {
+//     console.log(e);
+//     return { props: { products: [] } };
+//   }
+// }) satisfies GetServerSideProps<{ products: Product[] }>;
+
+// export const getStaticProps = (async (context) => {
 //   const client = await dbConnect();
 
 //   const products: Product[] = await Product.find({});
 
 //   console.log(products);
-
-//   // Pass data to the page via props
 //   return { props: { products } };
-// }) satisfies GetServerSideProps<{ products: Product[] }>;
+// }) satisfies GetStaticProps<{
+//   products: Product[];
+// }>;
 
-export const getStaticProps = (async (context) => {
-  const client = await dbConnect();
-
-  const products: Product[] = await Product.find({});
-  return { props: { products } };
-}) satisfies GetStaticProps<{
-  products: Product[];
-}>;
-
+//
+// InferGetStaticPropsType<typeof getStaticProps>
 // InferGetServerSidePropsType<typeof getServerSideProps>
 
-export default async function Menu({
-  products,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
-  console.log(products);
-
-  const PRODUCT_TYPES = Array.isArray(products)
-    ? Array.from(new Set(products.map((item) => item.brand + " " + item.model)))
-    : [];
+export default async function Menu() {
+  const productTypes = await getProductTypes();
+  const brands = Array.from(new Set(productTypes.map((item) => item.brand)));
 
   return (
-    <ul className="bg-gradient-to-br to-sky-900 from-zinc-900 text-white font-extralight uppercase w-fit">
-      <li className="py-2 px-4 border-b-[1px] hover:bg-sky-800 duration-200">
-        <Link href={"/store"}>All Products</Link>
-      </li>
-      {PRODUCT_TYPES.map((item, index) => {
-        return (
-          <li
-            key={index}
-            className="py-2 px-4 border-b-[1px] text-nowrap hover:bg-sky-800 duration-200"
+    <nav className="hidden bg-zinc-100 text-sky-800 uppercase md:flex flex-col">
+      <ul>
+        <li>
+          <Link
+            href={"/store"}
+            className="block py-2 px-4 border-b-[1px] hover:bg-white duration-200"
           >
-            <Link href={`/store/model/${item}`}>{item}</Link>
-          </li>
+            All Products
+          </Link>
+        </li>
+        <li>
+          <Link
+            href="/store/sale"
+            className="block py-2 px-4 border-b-[1px] hover:bg-white duration-200"
+          >
+            Sale
+          </Link>
+        </li>
+      </ul>
+      {brands.map((brand, index) => {
+        const models = productTypes.filter((item) => item.brand === brand);
+        return (
+          <MenuGroup
+            brand={brand}
+            models={JSON.parse(JSON.stringify(models))}
+            key={index}
+          />
         );
       })}
-      <li className="py-2 px-4 border-b-[1px] hover:bg-sky-800 duration-200">
-        <Link href="/store/sale">Sale</Link>
-      </li>
-    </ul>
+    </nav>
   );
 }

@@ -9,34 +9,41 @@ export default function AdminProductCard({ product }: { product: Product }) {
     // deleteProduct(product?.id);
     await fetch("/api/products", {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ id: product.id }),
     });
   };
   //{product.image || "/noproduct.jpg"}
+
+  const temp =
+    (product?.imageURL ? product.imageURL : "") +
+    (product?.image ? product.image : "");
+  const image = Array.from(temp)[0] === "/" ? temp : "/products/noproduct.jpg";
+
   return (
     <tr key={product.id} className="bg-sky-900 rounded-md text-center">
       <td className="p-2 rounded-l-md">
-        <div className="flex items-center pl-2 gap-2">
+        <div className="flex flex-wrap items-center pl-2 gap-2">
           <Image
-            src={
-              product?.image && Array.from(product.image)[0] === "/"
-                ? product.image
-                : "/products/noproduct.jpg"
-            }
+            src={image}
             alt={product.name}
             width={40}
             height={40}
             className=""
           />
-          {product.brand}
+          <span>{product.brand}</span>
         </div>
       </td>
-      <td className="p-2 text-start">{product.name}</td>
+      <td className="p-2 text-start text-wrap">{product.name}</td>
       <td className="p-2">{product.price + " KZT"}</td>
-      <td className="p-2">{product.createDate?.toString().slice(0, 10)}</td>
+      <td className="p-2 hidden sm:table-cell">
+        {product.createDate?.toString().slice(0, 10)}
+      </td>
       <td className="p-2">{product.qtyAvailable}</td>
       <td className="p-2 text center rounded-r-md">
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <Link
             href={{
               pathname: "/admin/products/product/",

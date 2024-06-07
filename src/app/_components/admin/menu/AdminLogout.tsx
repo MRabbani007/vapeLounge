@@ -1,5 +1,6 @@
 import React from "react";
 import { MdLogout } from "react-icons/md";
+import styles from "./menu.module.css";
 
 export default function AdminLogout() {
   return (
@@ -8,8 +9,9 @@ export default function AdminLogout() {
         "use server";
         () => {};
       }}
+      className={styles.link_container}
     >
-      <button className="flex items-center gap-2">
+      <button className={styles.link} title="Logout">
         <MdLogout size={28} />
         <span>Logout</span>
       </button>

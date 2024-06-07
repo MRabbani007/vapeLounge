@@ -12,19 +12,34 @@ export default function CardProduct({ product }: { product: Product }) {
     router.push(`/product/${product.name}`);
   };
 
-  const handleAddtoCart = () => {
+  const handleAddtoCart = async () => {
+    const cartItem = {
+      prodID: product.id,
+      name: product.name,
+      image: (product?.imageURL || "") + product?.image,
+      price: product.price,
+      quantity: 1,
+    };
+    const response = await fetch("/api/cart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cartItem }),
+    });
     alert("Added to Cart");
   };
+
+  const temp =
+    (product?.imageURL ? product?.imageURL : "") +
+    (product?.image ? product?.image : "");
+
+  const image = Array.from(temp)[0] === "/" ? temp : "/products/noproduct.jpg";
 
   return (
     <div className="max-w-[350px] p-2 flex flex-col items-center rounded-xl hover:bg-zinc-100 hover:shadow-lg shadow-zinc-500 group duration-200">
       <div onClick={handleClick} className="relative">
-        <Image
-          src={product.image}
-          alt={product.name}
-          width={300}
-          height={400}
-        />
+        <Image src={image} alt={product?.name} width={300} height={400} />
         {product?.onSale === true ? (
           <span className="absolute top-5 right-5 -rotate-12 py-1 px-2 rounded-lg uppercase font-extrabold underline border-2 border-red-700 text-red-700">
             Sale

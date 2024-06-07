@@ -1,10 +1,12 @@
 type Product = {
+  _id?: string;
   id: string;
   name: string;
   title: string;
   brand: string;
   model: string;
   flavor: string;
+  imageURL: string;
   image: string;
   price: number;
   salePrice: number;
@@ -16,11 +18,10 @@ type Product = {
 
 type CartItem = {
   id: string;
-  productId: string;
-  productName: string;
-  productImage: string;
-  productPrice: number;
-  productCurrency: string;
+  prodID: string;
+  name: string;
+  image: string;
+  price: number;
   quantity: number;
 };
 
@@ -33,4 +34,9 @@ type User = {
   roles: number[];
   accessToken?: string;
   refreshToken?: string;
+};
+
+type ProductModel = {
+  brand: string;
+  model: string;
 };

@@ -2,25 +2,31 @@
 
 import React, { FormEvent, useEffect, useState } from "react";
 import styles from "./products.module.css";
+import { useRouter } from "next/navigation";
 
 export default function AdminFormProductEdit({
   product,
 }: {
   product: Product;
 }) {
-  const [title, setTitle] = useState(product?.title);
-  const [name, setName] = useState(product?.name);
+  const router = useRouter();
+  const [title, setTitle] = useState(product?.title || "");
+  const [name, setName] = useState(product?.name || "");
 
-  const [image, setImage] = useState(product?.image);
+  const [image, setImage] = useState(product?.image || "");
+  const [imageURL, setImageURL] = useState(product?.imageURL || "");
 
-  const [brand, setBrand] = useState(product?.brand);
-  const [model, setModel] = useState(product?.model);
-  const [flavor, setFlavor] = useState(product?.flavor);
+  const [brand, setBrand] = useState(product?.brand || "");
+  const [model, setModel] = useState(product?.model || "");
+  const [flavor, setFlavor] = useState(product?.flavor || "");
 
-  const [price, setPrice] = useState(product?.price);
-  const [quantity, setQuantity] = useState(product?.qtyAvailable);
+  const [price, setPrice] = useState(product?.price || 0);
+  const [salePrice, setSalePrice] = useState(product?.salePrice || 0);
+  const [onSale, setOnSale] = useState(product?.onSale || false);
 
-  const [visible, setVisible] = useState(product?.visible);
+  const [quantity, setQuantity] = useState(product?.qtyAvailable || 0);
+
+  const [visible, setVisible] = useState(Boolean(product?.visible));
 
   useEffect(() => {
     setName(brand + " " + model + " " + flavor);
@@ -40,25 +46,34 @@ export default function AdminFormProductEdit({
       model,
       flavor,
       image,
+      imageURL,
       price,
+      salePrice,
+      onSale,
       qtyAvailable: quantity,
       visible,
     };
 
-    const response = await fetch("/api/products", {
+    await fetch("/api/products", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(product),
-    });
-
-    // Handle response if necessary
-    // const data = await response.json();
+      body: JSON.stringify({ product: newProduct }),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          alert("Product Saved");
+          router.back();
+        } else if (response.status === 500) {
+          alert("Server Error");
+        }
+      })
+      .catch(() => {});
   };
 
   const handleCreate = async () => {
-    const newProduct = {
+    const newProduct: Product = {
       ...product,
       id: crypto.randomUUID(),
       name,
@@ -67,18 +82,29 @@ export default function AdminFormProductEdit({
       model,
       flavor,
       image,
+      imageURL,
       price,
+      salePrice,
+      onSale,
       qtyAvailable: quantity,
       visible,
     };
 
-    // const response = await fetch("/api/products", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ product: newProduct }),
-    // });
+    delete newProduct["_id"];
+
+    const response = await fetch("/api/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ product: newProduct }),
+    });
+
+    if (response.status === 200) {
+      alert("Product Created");
+    } else if (response.status === 500) {
+      alert("Server Error");
+    }
   };
 
   const handleReset = () => {
@@ -90,7 +116,7 @@ export default function AdminFormProductEdit({
     setFlavor(product?.flavor);
     setPrice(product?.price);
     setQuantity(product?.qtyAvailable);
-    setVisible(product?.visible);
+    setVisible(product?.visible || true);
   };
 
   const handleDelete = async () => {
@@ -152,6 +178,21 @@ export default function AdminFormProductEdit({
         />
       </div>
       <div className={styles.field}>
+        <label htmlFor="image_URL" className={styles.field_label}>
+          Image URL
+        </label>
+        <input
+          id="image_URL"
+          name="image_URL"
+          type="text"
+          title="Image_URL"
+          placeholder="Image URL"
+          value={imageURL}
+          onChange={(e) => setImageURL(e.target.value)}
+          className="field__input"
+        />
+      </div>
+      <div className={styles.field}>
         <label htmlFor="image" className={styles.field_label}>
           Image
         </label>
@@ -179,6 +220,22 @@ export default function AdminFormProductEdit({
           autoFocus
           value={price}
           onChange={(e) => setPrice(+e.target.value)}
+          className="field__input"
+        />
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="sale_price" className={styles.field_label}>
+          Sale Price
+        </label>
+        <input
+          id="sale_price"
+          name="sale_price"
+          type="text"
+          title="Sale Price"
+          placeholder="Sale Price"
+          autoFocus
+          value={salePrice}
+          onChange={(e) => setSalePrice(+e.target.value)}
           className="field__input"
         />
       </div>

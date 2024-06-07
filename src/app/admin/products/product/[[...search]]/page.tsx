@@ -21,6 +21,7 @@ export default async function AdminProductView({ searchParams }: Props) {
       <h1>Edit Product</h1>
       <section className="flex flex-wrap gap-4 p-4 w-full">
         <div className="">
+          <p className="text-wrap max-w-[400px]">{product?.name}</p>
           <div className="w-200 h-400">
             <Image
               src={
@@ -34,7 +35,6 @@ export default async function AdminProductView({ searchParams }: Props) {
               // fill
             />
           </div>
-          {product?.name}
         </div>
         <AdminFormProductEdit product={JSON.parse(JSON.stringify(product))} />
       </section>

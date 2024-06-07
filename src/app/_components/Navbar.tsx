@@ -1,15 +1,22 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { AiOutlineUser } from "react-icons/ai";
-import { PiCigaretteThin, PiShoppingCartLight } from "react-icons/pi";
+import { PiShoppingCartLight } from "react-icons/pi";
 import NavbarSearch from "./NavbarSearch";
-import { PRODUCT_TITLE } from "../_lib/products";
 import Image from "next/image";
 import Link from "next/link";
+import { getProductBrands } from "../_lib/productControllers";
+import CartDropDown from "./store/CartDropDown";
 
-export default function Navbar() {
+export default async function Navbar() {
+  const brands = await getProductBrands();
+
+  const [showCartDropDown, setShowCartDropDown] = useState(false);
+
   return (
-    <nav className="w-full bg-gradient-to-tr from-zinc-900 to-sky-900 text-white">
-      <div className="flex items-center justify-between px-8 py-4">
+    <nav className="w-full text-zinc-900">
+      <div className="flex items-center justify-between px-6 py-2">
         <p className="flex gap-4 font-light">
           <Link href={"/"}>Home</Link>
           <Link href={"/store"}>All Products</Link>
@@ -20,7 +27,7 @@ export default function Navbar() {
           <span>+7 777 777 7777</span>
         </p>
       </div>
-      <div className="flex items-center justify-between px-8 py-2">
+      <div className="flex items-center justify-between px-6 py-2 bg-zinc-200">
         {/* <PiCigaretteThin size={40} /> */}
         <Link title="Home" href={"/"}>
           <Image src={"/logo.png"} alt="Logo" width={100} height={70} />
@@ -32,24 +39,31 @@ export default function Navbar() {
           <Link href={"/login"}>
             <AiOutlineUser size={32} title="Sign In" />
           </Link>
-          <Link title="Cart" href={"/cart"} className="flex items-center gap-2">
+          <Link
+            title="Cart"
+            href={"/cart"}
+            onMouseOver={() => setShowCartDropDown(true)}
+            onMouseLeave={() => setShowCartDropDown(false)}
+            className="flex items-center gap-2"
+          >
             <PiShoppingCartLight size={32} />
             <span>
               <u>
                 0.00<b>KZT</b>
               </u>
             </span>
+            <CartDropDown showCartDropDown={showCartDropDown} />
           </Link>
         </div>
       </div>
-      <ul className="flex items-center justify-center px-8 py-4 font-light gap-8 uppercase">
+      <ul className="flex flex-wrap items-center justify-center px-6 py-2 font-light gap-2 md:gap-8 uppercase">
         <li>
-          <Link href={"/store/sale"}>Products on Sale</Link>
+          <Link href={"/store/sale"}>Sale</Link>
         </li>
         <li>
           <Link href={"/store"}>All Products</Link>
         </li>
-        {PRODUCT_TITLE.map((item, index) => {
+        {brands.map((item, index) => {
           return (
             <li key={index}>
               <Link href={`/store/brand/${item}`}>{item}</Link>

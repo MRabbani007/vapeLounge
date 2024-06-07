@@ -7,6 +7,7 @@ const productSchema = new mongoose.Schema({
   brand: { type: String, required: false, default: "" },
   model: { type: String, required: false, default: "" },
   flavor: { type: String, required: false, default: "" },
+  imageURL: { type: String, required: false, default: "" },
   image: { type: String, required: false, default: "" },
   price: { type: Number, required: false, default: 0 },
   salePrice: { type: Number, required: false, default: 0 },

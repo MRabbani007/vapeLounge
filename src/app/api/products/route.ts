@@ -26,15 +26,14 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const product = await request.json();
-
+    const data = await request.json();
+    const product = data?.product;
     const db = await dbConnect();
 
     const newProduct = new Product({ ...product });
-    const data = await newProduct.save();
+    const response = await newProduct.save();
 
-    console.log(data);
-    return new NextResponse(JSON.stringify(data));
+    return new NextResponse(JSON.stringify(response));
   } catch (e) {
     console.log(e);
     return NextResponse.error();
@@ -44,30 +43,66 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
-    const product = await request.json();
-
+    const body = await request.json();
+    const product = body?.product;
+    console.log("api/patch");
+    console.log(product);
     const db = await dbConnect();
 
-    const { id, name, title, brand, model, flavor, price, quantity } = product;
+    const {
+      id,
+      name,
+      title,
+      brand,
+      model,
+      flavor,
+      price,
+      salePrice,
+      onSale,
+      qtyAvailable,
+      image,
+      imageURL,
+    } = product;
 
     const data = await Product.updateOne(
       { id },
-      { $set: name, title, brand, model, flavor, price, quantity }
+      {
+        $set: {
+          name,
+          title,
+          brand,
+          model,
+          flavor,
+          price,
+          salePrice,
+          onSale,
+          qtyAvailable,
+          image,
+          imageURL,
+        },
+      }
     ).exec();
+
+    console.log(data);
+
+    if (data?.acknowledged === false) {
+      return new NextResponse(JSON.stringify({ status: "failed" }));
+    }
 
     return new NextResponse(JSON.stringify({ status: "success" }));
   } catch (e) {
     console.log(e);
+    return NextResponse.error();
   } finally {
   }
 }
 
 export async function DELETE(request: Request) {
   try {
-    const action = await request.json();
-    const id = action.payload;
+    const body = await request.json();
+    const id = body?.id;
 
-    const client = await clientPromise;
+    const client = await dbConnect();
 
     const data = await Product.deleteOne({ id }).exec();
 

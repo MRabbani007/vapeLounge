@@ -12,6 +12,25 @@
 
 .link_container .link {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 0.5rem;
+  width: fit-content;
+}
+
+.link span {
+  display: none;
+}
+
+.group_header {
+  display: none;
+}
+
+@media screen and (min-width: 648px) {
+  .link span {
+    display: inline;
+  }
+  .group_header {
+    display: inline-block;
+  }
 }

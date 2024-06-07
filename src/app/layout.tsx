@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Navbar />
-        <div className="flex gap-2">{children}</div>
+        <div className="flex gap-2 items-stretch">{children}</div>
         <Footer />
       </body>
     </html>
