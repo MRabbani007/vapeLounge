@@ -9,7 +9,7 @@ const options = {
 
 // ?retryWrites=true&w=majority&appName=vapeLounge
 
-if (!MONGODB_URI) {
+if (!MONGODB_URI || !MONGODB_DB) {
   throw new Error("Please add your Mongo URI to .env.local");
 }
 
@@ -26,7 +26,6 @@ async function dbConnect() {
     cached.promise = mongoose
       .connect(`${MONGODB_URI}/${MONGODB_DB}`, {
         retryWrites: true,
-        appName: "vapeLounge",
       })
       .then((mongoose) => mongoose);
   }

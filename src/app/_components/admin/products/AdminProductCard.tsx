@@ -31,7 +31,7 @@ export default function AdminProductCard({ product }: { product: Product }) {
             alt={product.name}
             width={40}
             height={40}
-            className=""
+            className="max-h-14 w-auto"
           />
           <span>{product.brand}</span>
         </div>

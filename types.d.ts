@@ -31,9 +31,15 @@ type User = {
   password: string;
   confirm?: string;
   email?: string;
+  img?: string;
+  phone?: number;
+  address?: string;
+  isAdmin?: boolean;
+  isActive?: boolean;
   roles: number[];
   accessToken?: string;
   refreshToken?: string;
+  createdAt: date;
 };
 
 type ProductModel = {

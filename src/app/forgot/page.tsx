@@ -1,17 +1,11 @@
-"use client";
-
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState("");
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-  };
+  // const [email, setEmail] = useState("");
 
   return (
     <main>
-      <form onSubmit={handleSubmit} className="login-form">
+      <form className="login-form">
         <h1>Forgot Password</h1>
         <div className="flex items-center gap-2">
           <label htmlFor="email">Enter Email</label>
@@ -22,8 +16,6 @@ export default function ForgotPasswordPage() {
             title="Email"
             placeholder="Account Email"
             className="field__input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <p>

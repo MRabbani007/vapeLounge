@@ -9,7 +9,7 @@ export default function CardProduct({ product }: { product: Product }) {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/product/${product.name}`);
+    router.push(`/product/${product?.name}`);
   };
 
   const handleAddtoCart = async () => {
@@ -39,7 +39,13 @@ export default function CardProduct({ product }: { product: Product }) {
   return (
     <div className="max-w-[350px] p-2 flex flex-col items-center rounded-xl hover:bg-zinc-100 hover:shadow-lg shadow-zinc-500 group duration-200">
       <div onClick={handleClick} className="relative">
-        <Image src={image} alt={product?.name} width={300} height={400} />
+        <Image
+          src={image}
+          alt={product?.name}
+          width={300}
+          height={400}
+          className="h-[300px] w-auto"
+        />
         {product?.onSale === true ? (
           <span className="absolute top-5 right-5 -rotate-12 py-1 px-2 rounded-lg uppercase font-extrabold underline border-2 border-red-700 text-red-700">
             Sale

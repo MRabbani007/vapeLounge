@@ -9,6 +9,16 @@
   /* --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255; */
+  --bg: #151c2c;
+  --bgSoft: #182237;
+  --text: white;
+  --textSoft: #b7bac1;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,6 +37,8 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb)); */
+  /* background-color: var(--bg);
+  color: var(--text); */
 }
 
 main {

@@ -14,7 +14,6 @@ export const getProducts = async (page?: number) => {
       .limit(ITEM_PER_PAGE)
       .skip(ITEM_PER_PAGE * (pageNum - 1));
 
-    console.log(count);
     return { count, products };
   } catch (err) {
     console.log(err);
@@ -37,7 +36,6 @@ export const searchProducts = async (query?: string, page?: number) => {
       .limit(ITEM_PER_PAGE)
       .skip(ITEM_PER_PAGE * (pageNum - 1));
 
-    console.log(count);
     return { count, products };
   } catch (err) {
     console.log(err);
@@ -56,14 +54,39 @@ export const getProductById = async (id: string) => {
   }
 };
 
+export const getProductByName = async (name: string) => {
+  try {
+    await dbConnect();
+    const product = await Product.findOne({ name });
+    return product;
+  } catch (err) {
+    console.log(err);
+    throw new Error("Failed to fetch product!");
+  }
+};
+
 export const getProductByModel = async (brand: string, model: string) => {
-  const data = await Product.find({ brand, model });
-  return Array.isArray(data) ? data : ([] as Product[]);
+  try {
+    await dbConnect();
+
+    const data = await Product.find({ brand, model });
+    return Array.isArray(data) ? data : ([] as Product[]);
+  } catch (error) {
+    console.log("Error");
+    return [];
+  }
 };
 
 export const getProductSale = async () => {
-  const data = await Product.find({ onSale: true });
-  return Array.isArray(data) ? data : [];
+  try {
+    await dbConnect();
+
+    const data = await Product.find({ onSale: true });
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.log("Error: get products sale");
+    return [];
+  }
 };
 
 export const deleteProduct = async (id: string) => {
@@ -82,7 +105,7 @@ export const getProductTypes = async (): Promise<ProductModel[]> => {
   try {
     await dbConnect();
 
-    const models = await Product.aggregate([
+    const models: ProductModel[] = await Product.aggregate([
       { $group: { _id: { brand: "$brand", model: "$model" } } },
       {
         $replaceRoot: { newRoot: "$_id" },
@@ -98,13 +121,28 @@ export const getProductTypes = async (): Promise<ProductModel[]> => {
 };
 
 export const getProductModels = async (brand: string) => {
-  const data = await Product.distinct("model", { brand });
+  try {
+    await dbConnect();
 
-  return data;
+    const data = await Product.distinct("model", { brand });
+
+    return data;
+  } catch (error) {
+    console.log("Error: Get product models");
+    return [];
+  }
 };
 
 export const getProductBrands = async () => {
-  const data = await Product.distinct("brand", {});
+  try {
+    await dbConnect();
 
-  return data;
+    const data = await Product.distinct("brand", {});
+
+    return data;
+  } catch (error) {
+    console.log("Error: Get product brands");
+    console.log(error);
+    return [];
+  }
 };

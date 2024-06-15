@@ -1,23 +1,22 @@
 import User from "@/app/_lib/dbSchemas/user";
-import { NextResponse } from "next/server";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs-react";
 import { cookies } from "next/headers";
 import clientPromise from "@/app/_lib/db";
 import dbConnect from "@/app/_lib/mongoose";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request, response: Response) {
   try {
     const client = await dbConnect();
+    const data = await request.json();
 
-    const temp = await request.json();
-    console.log(temp);
-
-    const { username, password, confirm }: Partial<User> = temp;
+    const { username, password, confirm }: Partial<User> = data;
 
     console.log(username, password);
 
-    if (!username || !password || !confirm)
+    if (!username || !password || !confirm) {
       return NextResponse.json({ message: "Missing required data" });
+    }
 
     // const db = client.db("vapeLounge");
     // const collection = db.collection("users");
@@ -34,17 +33,17 @@ export async function POST(request: Request, response: Response) {
 
       // const password_hash = createHash('sha256').update(password).digest('hex');
 
-      const data = await User.create({
+      const result = await User.create({
         id: crypto.randomUUID(),
         username,
         password,
         email: "",
-        roles: 2001,
-        createDate: new Date(),
+        roles: { User: 2001 },
         active: false,
         lastSigin: new Date("1900-01-01"),
         refreshToken: "",
         accessToken: "",
+        createDate: new Date(),
       });
 
       // const cookie = cookies(request, response);
@@ -54,6 +53,6 @@ export async function POST(request: Request, response: Response) {
     }
   } catch (e) {
     console.log(e);
-    return NextResponse.error();
+    return NextResponse.json({ message: "Server Error" });
   }
 }

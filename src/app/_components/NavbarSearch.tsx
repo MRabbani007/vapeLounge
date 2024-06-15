@@ -1,15 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 
 export default function NavbarSearch() {
   const [search, setSearch] = useState("");
   const router = useRouter();
 
-  const handleSearch = (e: any) => {
-    e.preventDefault();
+  const handleSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     router.push(`/store/search/${search}`);
   };
 
@@ -24,7 +24,7 @@ export default function NavbarSearch() {
         placeholder="Search"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="flex-1 bg-transparent text-zinc-600 py-2 outline-none"
+        className="flex-1 bg-transparent py-2 outline-none"
       />
       <button type="submit" title="Search">
         <IoIosSearch size={32} />

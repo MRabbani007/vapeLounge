@@ -1,21 +1,34 @@
 "use client";
 
+import React, { FormEvent, useState } from "react";
 import Link from "next/link";
-import React, { useState } from "react";
-import clientPromise from "../_lib/db";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
-  const [user, setUser] = useState("");
-  const [pwd, setPwd] = useState("");
-  const [confirm, setConfirm] = useState("");
+  const router = useRouter();
 
-  // const handleSubmit = (e: any) => {
-  //   e.preventDefault();
-  // };
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+
+    const response = await fetch("/api/user/register", {
+      method: "POST",
+      body: JSON.stringify(Object.fromEntries(formData)),
+    });
+
+    if (response?.status === 200) {
+      alert("Registered");
+      // router.push("/login");
+    } else {
+      alert("Failed to register");
+      // router.push("/register");
+    }
+  };
 
   return (
     <main>
-      <form action={"/api/user/register"} className="login-form">
+      <form onSubmit={handleSubmit} name="form_register" className="login-form">
         <h1>Sign Up</h1>
         <div className="field__group">
           <label htmlFor="username">Username</label>
@@ -26,8 +39,7 @@ export default function RegisterPage() {
             title="Username"
             placeholder="Username"
             required
-            value={user}
-            onChange={(e) => setUser(e.target.value)}
+            autoFocus
           />
         </div>
         <div className="field__group">
@@ -39,8 +51,6 @@ export default function RegisterPage() {
             title="Password"
             placeholder="Password"
             required
-            value={pwd}
-            onChange={(e) => setPwd(e.target.value)}
           />
         </div>
         <div className="field__group">
@@ -52,36 +62,15 @@ export default function RegisterPage() {
             title="Confirm Password"
             placeholder="Confirm Password"
             required
-            value={confirm}
-            onChange={(e) => setConfirm(e.target.value)}
           />
         </div>
         <div>
           <button type="submit" title="Sign In" className="submit__button">
             Sign Up
-          </button>{" "}
+          </button>
           or <Link href={"/login"}>Sign In</Link>
         </div>
       </form>
     </main>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   try {
-//     const client = await clientPromise;
-//     const db = client.db("sample_mflix");
-//     const movies = await db
-//       .collection("movies")
-//       .find({})
-//       .sort({ metacritic: -1 })
-//       .limit(20)
-//       .toArray();
-//     return {
-//       props: { movies: JSON.parse(JSON.stringify(movies)) },
-//     };
-//   } catch (e) {
-//     console.error(e);
-//     return { props: { movies: [] } };
-//   }
-// };

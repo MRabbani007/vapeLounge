@@ -62,10 +62,10 @@ export default function AdminFormProductEdit({
       body: JSON.stringify({ product: newProduct }),
     })
       .then((response) => {
-        if (response.status === 200) {
+        if (response?.status === 200) {
           alert("Product Saved");
           router.back();
-        } else if (response.status === 500) {
+        } else if (response?.status === 500) {
           alert("Server Error");
         }
       })
@@ -100,9 +100,9 @@ export default function AdminFormProductEdit({
       body: JSON.stringify({ product: newProduct }),
     });
 
-    if (response.status === 200) {
+    if (response?.status === 200) {
       alert("Product Created");
-    } else if (response.status === 500) {
+    } else if (response?.status === 500) {
       alert("Server Error");
     }
   };

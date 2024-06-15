@@ -16,9 +16,9 @@ import {
 import { FaUserCircle } from "react-icons/fa";
 import AdminLogout from "./AdminLogout";
 
-export default function AdminMenu() {
+export default async function AdminMenu() {
   return (
-    <div className="bg-sky-950 text-slate-100 py-4 px-2 font-light flex flex-col items-center sm:items-start gap-2">
+    <div className="bg-zinc-800 text-slate-100 py-4 px-2 font-light flex flex-col items-center sm:items-start gap-2">
       <div className={styles.link_container}>
         <Link href={"/admin"} className={styles.link}>
           <FaUserCircle size={28} />

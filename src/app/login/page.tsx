@@ -1,35 +1,51 @@
-"use client";
+"use server";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import { auth, signIn } from "../../../auth";
+import { isRedirectError } from "next/dist/client/components/redirect";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
-  const [user, setUser] = useState("");
-  const [pwd, setPwd] = useState("");
+const authenticate = async (formData: FormData) => {
+  "use server";
+  try {
+    const { username, password } = Object.fromEntries(formData);
 
-  const [remember, setRemember] = useState(true);
+    const res = await signIn("credentials", {
+      username,
+      password,
+      redirectTo: "/",
+    });
+  } catch (error: any) {
+    if (error.message.includes("CredentialsSignin")) {
+      return "Wrong Credentials";
+    } else if (isRedirectError(error)) {
+      throw error;
+    } else {
+      console.log("Sign in error");
+    }
+  }
+};
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-  };
+export default async function LoginPage() {
+  const session = await auth();
 
-  const handleRemember = () => {};
+  if (session?.user?.username) {
+    redirect("/logout");
+  }
 
   return (
     <main>
-      <form onSubmit={handleSubmit} className="login-form">
+      <form action={authenticate} className="login-form">
         <h1>Sign In</h1>
         <div className="field__group">
-          <label htmlFor="user">Username</label>
+          <label htmlFor="username">Username</label>
           <input
-            id="user"
-            name="user"
+            id="username"
+            name="username"
             type="text"
             title="Username"
             placeholder="Username"
             required
-            value={user}
-            onChange={(e) => setUser(e.target.value)}
           />
         </div>
         <div className="field__group">
@@ -41,8 +57,6 @@ export default function LoginPage() {
             title="Password"
             placeholder="Password"
             required
-            value={pwd}
-            onChange={(e) => setPwd(e.target.value)}
           />
         </div>
         <Link href={"/forgot"} className="forgot__password">
@@ -55,13 +69,7 @@ export default function LoginPage() {
           or <Link href={"/register"}>Register</Link>
         </div>
         <div className="flex items-center gap-2">
-          <input
-            id="remember"
-            name="remember"
-            type="checkbox"
-            checked={remember}
-            onChange={(e) => setRemember(e.target.checked)}
-          />
+          <input id="remember" name="remember" type="checkbox" />
           <label htmlFor="remember" className="remember">
             Remember Me
           </label>

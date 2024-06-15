@@ -75,9 +75,9 @@ export default function AdminFormProductAdd() {
     });
 
     // Handle response if necessary
-    if (response.status === 200) {
+    if (response?.status === 200) {
       alert("Product Saved");
-    } else if (response.status === 500) {
+    } else if (response?.status === 500) {
       alert("Server Error");
     }
   };
